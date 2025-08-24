@@ -687,7 +687,7 @@ class GaitAuthSystem {
 
             scores.sort((a, b) => b.similarity - a.similarity);
             const bestMatch = scores[0];
-            const threshold = 0.80;
+            const threshold = 0.85;
 
             if (bestMatch.similarity >= threshold && result.confidence >= 0.6) {
                 this.showAuthenticationSuccess(result.prediction, bestMatch.similarity, result.confidence);
