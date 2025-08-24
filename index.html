@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gait Authentication System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="background-container">
+        <div class="particle-field"></div>
+        <div class="grid-overlay"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="app-container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="glass-panel welcome-panel">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <div class="scan-line"></div>
+                    </div>
+                    <h1 class="app-title">GAIT<span class="accent">AUTH</span></h1>
+                    <p class="subtitle">Next-Generation Biometric Authentication</p>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>Motion Sensing</h3>
+                        <p>Advanced gyroscope & accelerometer analysis</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3>AI Classification</h3>
+                        <p>Random Forest machine learning algorithm</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Secure Identity</h3>
+                        <p>Unique motion pattern recognition</p>
+                    </div>
+                </div>
+
+                <button class="cta-button" onclick="showModeSelection()">
+                    <span>BEGIN AUTHENTICATION</span>
+                    <div class="button-glow"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mode Selection Screen -->
+        <div id="mode-selection" class="screen">
+            <div class="glass-panel mode-panel">
+                <h2 class="screen-title">Select Operation Mode</h2>
+                
+                <div class="mode-buttons">
+                    <button class="mode-button register-mode" onclick="startRegistration()">
+                        <div class="mode-icon">👤</div>
+                        <h3>Registration</h3>
+                        <p>Create new biometric profile</p>
+                        <div class="mode-glow"></div>
+                    </button>
+                    
+                    <button class="mode-button auth-mode" onclick="startAuthentication()">
+                        <div class="mode-icon">🔓</div>
+                        <h3>Authentication</h3>
+                        <p>Verify existing identity</p>
+                        <div class="mode-glow"></div>
+                    </button>
+                </div>
+
+                <div class="profile-management">
+                    <h3>Stored Profiles</h3>
+                    <div id="profile-list" class="profile-grid">
+                        <!-- Profiles will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <button class="back-button" onclick="showWelcome()">
+                    ← Back to Welcome
+                </button>
+            </div>
+        </div>
+
+        <!-- Registration Screen -->
+        <div id="registration-screen" class="screen">
+            <div class="glass-panel registration-panel">
+                <h2 class="screen-title">Create New Profile</h2>
+                
+                <div class="input-group">
+                    <label for="username">User Name</label>
+                    <input type="text" id="username" placeholder="Enter your name" maxlength="20">
+                </div>
+
+                <div class="registration-info">
+                    <p>Hold your device and perform any repeated motion for 7 seconds.</p>
+                    <p>Supported motions: Walking, Circular, Shaking, Waving, or any custom pattern.</p>
+                </div>
+
+                <button id="start-registration" class="action-button" onclick="beginRegistration()">
+                    <span>START RECORDING</span>
+                    <div class="button-pulse"></div>
+                </button>
+
+                <button class="back-button" onclick="showModeSelection()">
+                    ← Back to Modes
+                </button>
+            </div>
+        </div>
+
+        <!-- Authentication Screen -->
+        <div id="authentication-screen" class="screen">
+            <div class="glass-panel auth-panel">
+                <h2 class="screen-title">Identity Verification</h2>
+                
+                <div class="auth-info">
+                    <p>Perform your registered motion pattern for 7 seconds.</p>
+                    <p>The system will analyze and match your biometric signature.</p>
+                </div>
+
+                <button id="start-authentication" class="action-button" onclick="beginAuthentication()">
+                    <span>START VERIFICATION</span>
+                    <div class="button-pulse"></div>
+                </button>
+
+                <button class="back-button" onclick="showModeSelection()">
+                    ← Back to Modes
+                </button>
+            </div>
+        </div>
+
+        <!-- Recording Screen -->
+        <div id="recording-screen" class="screen">
+            <div class="recording-container">
+                <div class="recording-header">
+                    <h2 id="recording-title">Recording Motion Pattern</h2>
+                    <div class="timer-display">
+                        <span id="countdown-timer">7.0</span>
+                        <span>seconds</span>
+                    </div>
+                </div>
+
+                <div class="visualization-area">
+                    <!-- Motion Visualization Canvas -->
+                    <canvas id="motion-canvas" width="400" height="400"></canvas>
+                    
+                    <!-- Animated Elements -->
+                    <div class="footstep-trail">
+                        <div class="footstep left"></div>
+                        <div class="footstep right"></div>
+                        <div class="footstep left"></div>
+                        <div class="footstep right"></div>
+                        <div class="footstep left"></div>
+                        <div class="footstep right"></div>
+                    </div>
+                    
+                    <div class="motion-ripples">
+                        <div class="ripple"></div>
+                        <div class="ripple"></div>
+                        <div class="ripple"></div>
+                    </div>
+                    
+                    <div class="neon-trails">
+                        <div class="trail trail-1"></div>
+                        <div class="trail trail-2"></div>
+                        <div class="trail trail-3"></div>
+                    </div>
+                </div>
+
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" width="200" height="200">
+                        <circle class="progress-ring-bg" cx="100" cy="100" r="90" />
+                        <circle class="progress-ring-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="progress-text">
+                        <span id="progress-percentage">0%</span>
+                        <span class="progress-label">Complete</span>
+                    </div>
+                </div>
+
+                <div class="sensor-data-display">
+                    <div class="sensor-reading">
+                        <label>Accelerometer</label>
+                        <div class="sensor-values">
+                            <span id="accel-x">0.00</span>
+                            <span id="accel-y">0.00</span>
+                            <span id="accel-z">0.00</span>
+                        </div>
+                    </div>
+                    <div class="sensor-reading">
+                        <label>Gyroscope</label>
+                        <div class="sensor-values">
+                            <span id="gyro-x">0.00</span>
+                            <span id="gyro-y">0.00</span>
+                            <span id="gyro-z">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="glass-panel results-panel">
+                <div id="success-result" class="result-container success hidden">
+                    <div class="result-icon">✅</div>
+                    <h2>Authentication Successful</h2>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <label>Matched Identity:</label>
+                            <span id="matched-identity">Unknown</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Accuracy Score:</label>
+                            <span id="accuracy-score">0%</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Confidence Level:</label>
+                            <span id="confidence-level">0%</span>
+                        </div>
+                    </div>
+                    <div class="success-animation">
+                        <div class="checkmark">
+                            <div class="checkmark-circle"></div>
+                            <div class="checkmark-stem"></div>
+                            <div class="checkmark-kick"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="failure-result" class="result-container failure hidden">
+                    <div class="result-icon">❌</div>
+                    <h2>Authentication Failed</h2>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <label>Best Match:</label>
+                            <span id="best-match">None</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Max Score:</label>
+                            <span id="max-score">0%</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Threshold:</label>
+                            <span>85%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="registration-result" class="result-container registration hidden">
+                    <div class="result-icon">📝</div>
+                    <h2>Profile Created Successfully</h2>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <label>User Name:</label>
+                            <span id="registered-name">Unknown</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Pattern Captured:</label>
+                            <span>7 seconds</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Features Extracted:</label>
+                            <span id="feature-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button class="action-button" onclick="showModeSelection()">
+                        Try Again
+                    </button>
+                    <button class="secondary-button" onclick="showWelcome()">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div id="error-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="error-icon">⚠️</div>
+                <h3>Error Occurred</h3>
+                <p id="error-message">An unexpected error occurred.</p>
+                <button class="modal-button" onclick="closeErrorModal()">
+                    Understood
+                </button>
+            </div>
+        </div>
+
+        <!-- Permission Modal -->
+        <div id="permission-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="info-icon">📱</div>
+                <h3>Sensor Access Required</h3>
+                <p>This application requires access to your device's motion sensors (accelerometer and gyroscope) for authentication.</p>
+                <p>Please grant permission when prompted.</p>
+                <button class="modal-button" onclick="requestSensorPermission()">
+                    Grant Permission
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
