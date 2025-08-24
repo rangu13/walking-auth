@@ -631,7 +631,7 @@ class GaitAuthSystem {
             name: username,
             features: normalizedFeatures,
             created: new Date().toLocaleDateString(),
-            accuracy: 0.95 // Default accuracy estimate
+           
         };
 
         this.profiles.push(profile);
